@@ -1,0 +1,10 @@
+FROM l0odano0l:cci-latest
+
+WORKDIR /app
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN mv /cache/build/node_modules ./node_modules/
+RUN yarn install
+
