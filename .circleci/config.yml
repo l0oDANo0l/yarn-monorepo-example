@@ -13,6 +13,7 @@ jobs:
       - image: cimg/node:16.13
     steps:
       - checkout
+      - run: yarn set version latest
       - run: yarn install
       - save_cache:
           key: c-yarn-main
@@ -32,9 +33,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: c-yarn-main
-      - restore_cache:
-          key: c-yarn-branch
+          key: c-yarn-<< pipeline.git.branch >>
+      - run: yarn set version latest
       - run: yarn install
       - save_cache:
           key: c-yarn-<< pipeline.git.branch >>
