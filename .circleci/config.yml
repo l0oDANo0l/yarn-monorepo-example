@@ -48,7 +48,7 @@ jobs:
   
   test-branch:
     docker:
-      - image: $DOCKER_HUB_USER/cci-test:pipe-<< pipeline.number >>
+      - image: l0odano0l/cci-test:pipe-<< pipeline.number >>
     steps:
       - run: echo 'grand'
       - run: ls
