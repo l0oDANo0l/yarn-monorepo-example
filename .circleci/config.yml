@@ -51,7 +51,7 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  build-main-flow:
+  build-main:
     jobs:
       - build-docker-main:
           context: cci-test
@@ -59,7 +59,7 @@ workflows:
             branches:
               only: /^main.*/
 
-  test-branch-flow:
+  test-branch:
     jobs:
       - build-branch:
           context: cci-test
