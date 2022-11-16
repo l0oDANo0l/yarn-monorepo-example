@@ -75,8 +75,6 @@ workflows:
       #         only: /^dlc.*/
       - build-branch:
           context: cci-test
-          requires:
-            - build-docker-main
       - test-branch:
           requires:
             - build-branch
