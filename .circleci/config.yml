@@ -3,39 +3,6 @@
 version: 2.1
 
 
-commands:
-
-  prime-yarn-cache:
-    parameters:
-      yarn_cache_name:
-        default: "main"
-        type: string
-    steps:
-      - save_cache:
-          keys: c-yarn-<< parameters.yarn_cache_name >>
-          paths:
-            - .yarn/cache
-            - .yarn/build-state.yml
-            - .yarn/install-state.gz
-            - node_modules
-     
-
-  restore-yarn-cache:
-    parameters:
-      yarn_cache_name:
-        default: "main"
-        type: string
-    steps:
-      - restore_cache:
-          keys: c-yarn-<< parameters.yarn_cache_name >>
-    
-
-  install:
-    steps:
-      - run:
-          name: yarn install
-          command: yarn install
-
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -75,7 +42,7 @@ jobs:
             - node_modules
       - run: yarn workspace frontend build
       - save_cache:
-          key: c-build-$CIRCLE_BRANCH
+          key: c-build-{{ CIRCLE_BRANCH }}
           paths:
             - frontend
             - backend
@@ -88,7 +55,7 @@ jobs:
       - image: cimg/node:16.13
     steps:
       - restore_cache:
-          key: c-build-$CIRCLE_BRANCH
+          key: c-build-{{ CIRCLE_BRANCH }}
       - run: yarn start
 
 
