@@ -7,7 +7,24 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  
+  build-docker-main:
+    docker:
+      - image: cimg/node:16.13
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build 
+          command: docker build . -t cci-test
+      - deploy:
+          name: Push application Docker image
+          command: |
+            docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER -p $DOCKER_HUB_PWD
+            docker tag cci-test $DOCKER_HUB_USER/cci-test:latest
+            docker push $DOCKER_HUB_USER/cci-test:latest
+
+
   build-branch:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -34,9 +51,18 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
+  build-main-flow:
+    jobs:
+      - build-docker-main:
+          context: cci-test
+          filters:
+            branches:
+              only: /^main.*/
+
   test-branch-flow:
     jobs:
       - build-branch:
+          context: cci-test
           filters:
             branches:
               ignore: main
