@@ -37,12 +37,25 @@ jobs:
       - run: mv /cache/build/node_modules .
       - run: ls
       - run: yarn install
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build 
+          command: docker build . -f Dockerfile.pipe -t cci-pipe
+      - deploy:
+          name: Push application Docker image
+          command: |
+            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PWD
+            docker tag cci-test $DOCKER_HUB_USER/cci-test:pipe-<< pipeline.id >>
+            docker push $DOCKER_HUB_USER/cci-test:pipe-<< pipeline.id >>
   
   test-branch:
     docker:
-      - image: cimg/node:16.13
+      - image: $DOCKER_HUB_USER/cci-test:pipe-<< pipeline.id >>
     steps:
       - run: echo 'grand'
+      - run: ls
+      - run: pwd
 
 
 # Invoke jobs via workflows
