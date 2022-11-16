@@ -34,8 +34,7 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - run: pwd
-      - run: ls
+      - run: yarn install
   
   test-branch:
     docker:
