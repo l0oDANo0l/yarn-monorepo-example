@@ -68,11 +68,11 @@ workflows:
 
   test-branch:
     jobs:
-      - build-docker-main:
-          context: cci-test
-          filters:
-            branches:
-              only: /^dlc.*/
+      # - build-docker-main:
+      #     context: cci-test
+      #     filters:
+      #       branches:
+      #         only: /^dlc.*/
       - build-branch:
           context: cci-test
           requires:
