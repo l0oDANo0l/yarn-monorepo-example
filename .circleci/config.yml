@@ -68,7 +68,7 @@ workflows:
 
   test-branch:
     jobs:
-       - build-docker-main:
+      - build-docker-main:
           context: cci-test
           filters:
             branches:
@@ -76,7 +76,7 @@ workflows:
       - build-branch:
           context: cci-test
           requires:
-            - build-branch
+            - build-docker-main
       - test-branch:
           requires:
             - build-branch
