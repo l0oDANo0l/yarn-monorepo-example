@@ -80,6 +80,8 @@ jobs:
             - frontend
             - backend
             - packages
+            - package.json
+            - node_modules
   
   test-branch:
     docker:
@@ -99,9 +101,9 @@ workflows:
   build-main-flow:
     jobs:
       - build-main-cache:
-        filters:
-          branches:
-            only: main
+          filters:
+            branches:
+              only: main
 
   test-branch-flow:
     jobs:
