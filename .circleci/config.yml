@@ -27,41 +27,24 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: cimg/node:16.13
+      - image: l0odano0l/cci-test
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
+      - run: ls node_modules
       - checkout
-      # - restore_cache:
-      #     key: c-yarn-<< pipeline.git.branch >>
-      - run: yarn set version 3.1.1
+      - run: ls node_modules
       - run: yarn install
-      - save_cache:
-          key: c-yarn-<< pipeline.git.branch >>
-          paths:
-            - node_modules
-      - run: yarn workspace frontend build
-      - save_cache:
-          key: c-build-<< pipeline.git.branch >>
-          paths:
-            - frontend
-            - backend
-            - packages
-            - package.json
-            - node_modules
+      - run: ls node_modules
+      - run: yarn add leftpad
+      - run: ls node_modules
   
   test-branch:
     docker:
       - image: cimg/node:16.13
     steps:
-      - restore_cache:
-          key: c-yarn-<< pipeline.git.branch >>
-      - restore_cache:
-          key: c-build-<< pipeline.git.branch >>
-      - run: yarn start
+      - run: echo 'grand'
 
-
-     
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
