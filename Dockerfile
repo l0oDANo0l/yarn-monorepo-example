@@ -1,4 +1,4 @@
-FROM node:16 as BASE
+FROM node:16.18 as BASE
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY . .
 RUN yarn 
 RUN yarn build
 
-FROM node:16 as BUILD
+FROM node:16.18 as BUILD
 
 WORKDIR /cache/build
 

@@ -1,9 +1,11 @@
-FROM l0odano0l/cci-test:latest
+FROM l0odano0l/cci-test:latest as BASE
+
+
+FROM node:16.8
 
 COPY . .
 
-RUN ls /cache/build
-RUN mv /cache/build/node_modules ./node_modules/
+COPY --from=0 /cache/build/node_modules ./node_modules
 
 RUN ls
 
