@@ -13,7 +13,7 @@ jobs:
       - image: cimg/node:16.13
     steps:
       - checkout
-      - run: yarn set version berry
+      - run: yarn set version 3.1.1
       - run: yarn install
       - save_cache:
           key: c-yarn-main
@@ -34,7 +34,7 @@ jobs:
       - checkout
       - restore_cache:
           key: c-yarn-<< pipeline.git.branch >>
-      - run: yarn set version berry
+      - run: yarn set version 3.1.1
       - run: yarn install
       - save_cache:
           key: c-yarn-<< pipeline.git.branch >>
