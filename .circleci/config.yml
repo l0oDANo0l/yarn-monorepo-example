@@ -32,8 +32,8 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - restore_cache:
-          key: c-yarn-<< pipeline.git.branch >>
+      # - restore_cache:
+      #     key: c-yarn-<< pipeline.git.branch >>
       - run: yarn set version 3.1.1
       - run: yarn install
       - save_cache:
