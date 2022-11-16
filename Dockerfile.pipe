@@ -1,0 +1,12 @@
+FROM l0odano0l/test-cii:latest
+
+COPY . .
+
+RUN ls /cache/build
+
+RUN yarn install
+
+
+
+
+
