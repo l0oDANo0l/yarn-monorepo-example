@@ -25,7 +25,7 @@ jobs:
 
   build-branch:
     docker:
-      - image: cimg/node:16.13
+      - image: l0odano0l/cci-test:latest
     steps:
       - checkout
       - setup_remote_docker:
@@ -46,12 +46,6 @@ jobs:
       - image: l0odano0l/cci-test:pipe-<< pipeline.number >>
     steps:
       - run: pwd
-
-  test-branch-2:
-    docker:
-      - image: l0odano0l/cci-test:pipe-<< pipeline.number >>
-    steps:
-      - run: ls
 
 
 # Invoke jobs via workflows
