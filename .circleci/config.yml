@@ -24,7 +24,6 @@ jobs:
 
 
   build-branch:
-    working_directory: /app
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -33,7 +32,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: ls node_modules
+      - run: mv /app/node_modules ./node_modules/
       - run: yarn install
   
   test-branch:
