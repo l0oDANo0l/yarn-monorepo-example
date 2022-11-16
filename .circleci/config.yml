@@ -9,7 +9,7 @@ version: 2.1
 jobs:
   build-docker-main:
     docker:
-      - image: cimg/node:16.13
+      - image: cimg/node:16.18
     steps:
       - checkout
       - setup_remote_docker:
@@ -29,7 +29,7 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: cimg/node:16.13
+      - image: cimg/node:16.18
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -68,11 +68,15 @@ workflows:
 
   test-branch:
     jobs:
-      - build-branch:
+       - build-docker-main:
           context: cci-test
           filters:
             branches:
-              ignore: /^main.*/
+              only: /^dlc.*/
+      - build-branch:
+          context: cci-test
+          requires:
+            - build-branch
       - test-branch:
           requires:
             - build-branch

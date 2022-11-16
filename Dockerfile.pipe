@@ -1,18 +1,6 @@
 FROM l0odano0l/cci-test:latest as BASE
-
-RUN ls /cache/build
-
-FROM cimg/node:16.8
-
-
-COPY --from=0 /cache/build/node_modules .
-COPY . .
-
-RUN ls
-
+RUN mv /cache/build/node_modules .
+COPY package.json .
+COPY yarn.lock .
 RUN yarn install
-
-
-
-
 
