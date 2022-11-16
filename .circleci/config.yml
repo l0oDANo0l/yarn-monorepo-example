@@ -37,12 +37,12 @@ jobs:
           key: c-yarn-branch
       - run: yarn install
       - save_cache:
-          key: c-yarn-branch
+          key: c-yarn-<< pipeline.git.branch >>
           paths:
             - node_modules
       - run: yarn workspace frontend build
       - save_cache:
-          key: c-build-{{ CIRCLE_BRANCH }}
+          key: c-build-<< pipeline.git.branch >>
           paths:
             - frontend
             - backend
@@ -55,7 +55,9 @@ jobs:
       - image: cimg/node:16.13
     steps:
       - restore_cache:
-          key: c-build-{{ CIRCLE_BRANCH }}
+          key: c-yarn-<< pipeline.git.branch >>
+      - restore_cache:
+          key: c-build-<< pipeline.git.branch >>
       - run: yarn start
 
 
