@@ -32,7 +32,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: mv /app/node_modules ./node_modules/
+      - run: mv /cache/build/node_modules ./node_modules/
       - run: yarn install
   
   test-branch:
