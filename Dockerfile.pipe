@@ -3,6 +3,9 @@ FROM l0odano0l/cci-test:latest
 COPY . .
 
 RUN ls /cache/build
+RUN mv /cache/build/node_modules ./node_modules/
+
+RUN ls
 
 RUN yarn install
 
