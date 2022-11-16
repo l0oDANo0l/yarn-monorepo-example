@@ -65,7 +65,7 @@ workflows:
           context: cci-test
           filters:
             branches:
-              ignore: main
+              ignore: /^main.*/
       - test-branch:
           requires:
             - build-branch
