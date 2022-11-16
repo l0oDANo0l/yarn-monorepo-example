@@ -43,13 +43,13 @@ jobs:
   test-branch:
     working_directory: /app
     docker:
-      - image: $DOCKER_HUB_USER/cci-test:pipe-<< pipeline.number >>
+      - image: l0odano0l/cci-test:pipe-<< pipeline.number >>
     steps:
       - run: pwd
 
   test-branch-2:
     docker:
-      - image: $DOCKER_HUB_USER/cci-test:pipe-<< pipeline.number >>
+      - image: l0odano0l/cci-test:pipe-<< pipeline.number >>
     steps:
       - run: ls
 
