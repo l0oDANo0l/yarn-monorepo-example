@@ -7,21 +7,6 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-
-  build-main-cache:
-    docker:
-      - image: cimg/node:16.13
-    steps:
-      - checkout
-      - run: yarn set version 3.1.1
-      - run: yarn install
-      - save_cache:
-          key: c-yarn-main
-          paths:
-            - .yarn/cache
-            - .yarn/build-state.yml
-            - .yarn/install-state.gz
-            - node_modules
   
   build-branch:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -49,14 +34,6 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-
-  build-main-flow:
-    jobs:
-      - build-main-cache:
-          filters:
-            branches:
-              only: main
-
   test-branch-flow:
     jobs:
       - build-branch:
