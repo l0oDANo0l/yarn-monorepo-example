@@ -1,11 +1,12 @@
 FROM l0odano0l/cci-test:latest as BASE
 
+RUN ls /cache/build
 
-FROM node:16.8
+FROM cimg/node:16.8
 
+
+COPY --from=0 /cache/build/node_modules .
 COPY . .
-
-COPY --from=0 /cache/build/node_modules ./node_modules
 
 RUN ls
 
