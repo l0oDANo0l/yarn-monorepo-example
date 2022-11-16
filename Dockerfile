@@ -1,10 +1,9 @@
-FROM cimg/node:16.8 as BASE
-COPY . .
+FROM node:16.8 as BASE
+WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
 RUN yarn 
-RUN yarn build
 
-FROM cimg/node:16.8 as BUILD
-WORKDIR /cache/build
-COPY --from=0 /home/circleci/project/package.json .
-COPY --from=0 /home/circleci/project/yarn.lock .
-COPY --from=0 /home/circleci/project/node_modules ./node_modules
+FROM node:16.8 as BUILD
+WORKDIR /cache
+COPY --from=0 /app/node_modules ./node_modules

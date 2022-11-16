@@ -1,5 +1,5 @@
 FROM l0odano0l/cci-test:latest as BASE
-RUN mv /cache/build/node_modules .
+RUN mv /cache/node_modules .
 COPY package.json .
 COPY yarn.lock .
 RUN yarn install
