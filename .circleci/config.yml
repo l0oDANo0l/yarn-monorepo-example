@@ -83,7 +83,7 @@ jobs:
   
   test-branch:
     docker:
-      - image: cimg/node:16
+      - image: cimg/node:16.13
     steps:
       - restore_cache:
           key: c-build-$CIRCLE_BRANCH
