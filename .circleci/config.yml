@@ -54,6 +54,14 @@ jobs:
       - run: ls
       - run: pwd
 
+  test-branch2:
+    docker:
+      - image: l0odano0l/cci-test:pipe-<< pipeline.number >>
+    steps:
+      - run: echo 'grand'
+      - run: ls
+      - run: pwd
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -76,6 +84,9 @@ workflows:
       - build-branch:
           context: cci-test
       - test-branch:
+          requires:
+            - build-branch
+      - test-branch2:
           requires:
             - build-branch
         
