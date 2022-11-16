@@ -1,4 +1,4 @@
-FROM l0odano0l:cci-latest
+FROM l0odano0l:cci-test:latest
 
 WORKDIR /app
 
