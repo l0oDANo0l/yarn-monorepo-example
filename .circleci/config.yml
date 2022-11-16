@@ -2,25 +2,85 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+
+commands:
+  prime-cache:
+    parameters:
+      yarn_cache_name:
+        type: string
+    steps:
+      - save_cache:
+        key: c-yarn-<< parameters.yarn_cache_name >>
+        paths:
+          - .yarn/cache
+          - .yarn/build-state.yml
+          - .yarn/install-state.gz
+          - node_modules
+     
+
+  restore-cache:
+    parameters:
+      yarn_cache_name:
+        type: string
+    steps:
+      - restore_cache:
+        key: c-yarn-<< parameters.yarn_cache_name >>
+    
+
+
+
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
+
+  build-main-cache:
+    steps:
+      - checkout
+      - run: yarn install
+      - run: yarn build
+      - prime-cache:
+        yarn_cache_name: main
+  
+  build-branch:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:16
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+      - restore_cache:
+        yarn_cache_name: main
+      - run: yarn install
+      - run: yarn build
+      - prime_cache:
+        yarn_cache_name: {{ checksum "yarn.lock" }}
+
+  test-branch:
+    docker:
+      - image: cimg/node:16
+    requires:
+      - build-branch
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
+  build-main: 
+    filter:
+      branches:
+        only: main
+    jobs:
+      - build-main-cache
+
+  test-branch:
+    filter:
+      branches:
+        ignore: main
+    jobs:
+      - build-branch
+  
   say-hello-workflow:
     jobs:
       - say-hello
