@@ -4,30 +4,37 @@ version: 2.1
 
 
 commands:
-  prime-cache:
+
+  prime-yarn-cache:
     parameters:
       yarn_cache_name:
+        default: "main"
         type: string
     steps:
       - save_cache:
-        key: c-yarn-<< parameters.yarn_cache_name >>
-        paths:
-          - .yarn/cache
-          - .yarn/build-state.yml
-          - .yarn/install-state.gz
-          - node_modules
+          keys: c-yarn-<< parameters.yarn_cache_name >>
+          paths:
+            - .yarn/cache
+            - .yarn/build-state.yml
+            - .yarn/install-state.gz
+            - node_modules
      
 
-  restore-cache:
+  restore-yarn-cache:
     parameters:
       yarn_cache_name:
+        default: "main"
         type: string
     steps:
       - restore_cache:
-        key: c-yarn-<< parameters.yarn_cache_name >>
+          keys: c-yarn-<< parameters.yarn_cache_name >>
     
 
-
+  install:
+    steps:
+      - run:
+          name: yarn install
+          command: yarn install
 
 
 # Define a job to be invoked later in a workflow.
@@ -35,12 +42,18 @@ commands:
 jobs:
 
   build-main-cache:
+    docker:
+      - image: cimg/node:16
     steps:
       - checkout
       - run: yarn install
-      - run: yarn build
-      - prime-cache:
-        yarn_cache_name: main
+      - save_cache:
+          key: c-yarn-main
+          paths:
+            - .yarn/cache
+            - .yarn/build-state.yml
+            - .yarn/install-state.gz
+            - node_modules
   
   build-branch:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -52,35 +65,51 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        yarn_cache_name: main
+          key: c-yarn-main
+      - restore_cache:
+          key: c-yarn-branch
       - run: yarn install
-      - run: yarn build
-      - prime_cache:
-        yarn_cache_name: {{ checksum "yarn.lock" }}
-
+      - save_cache:
+          key: c-yarn-branch
+          paths:
+            - node_modules
+      - run: yarn workspace frontend build
+      - save_cache:
+          key: c-build-$CIRCLE_BRANCH
+          paths:
+            - frontend
+            - backend
+            - packages
+  
   test-branch:
     docker:
       - image: cimg/node:16
-    requires:
-      - build-branch
+    steps:
+      - restore_cache:
+          key: c-build-$CIRCLE_BRANCH
+      - run: yarn start
+
+
+     
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  build-main: 
-    filter:
-      branches:
-        only: main
-    jobs:
-      - build-main-cache
 
-  test-branch:
-    filter:
-      branches:
-        ignore: main
+  build-main-flow:
     jobs:
-      - build-branch
-  
-  say-hello-workflow:
+      - build-main-cache:
+        filters:
+          branches:
+            only: main
+
+  test-branch-flow:
     jobs:
-      - say-hello
+      - build-branch:
+          filters:
+            branches:
+              ignore: main
+      - test-branch:
+          requires:
+            - build-branch
+        
